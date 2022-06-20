@@ -2,10 +2,20 @@
 let searchBtn = $('.searchBtn');
 let apiKey = 'bef3096b6b45e4625cc908be968f34b9';
 
+// For loop for persisting the data onto HMTL page
+for (let i = 0; i < localStorage.length; i++) {
+
+    let city = localStorage.getItem(i);
+    // console.log(localStorage.getItem("City"));
+    let cityName = $(".list-group").addClass("list-group-item");
+
+    cityName.append(`<li>${city}</li>`);
+}
+
 
 let keyCount = 0;
 
-searchBtn.click(function () {
+searchBtn.click(() => {
 
     let searchCity = $('.searchCity').val();
 
@@ -19,7 +29,7 @@ searchBtn.click(function () {
         $.ajax({
             url: urlCurrentDay,
             method: "GET"
-        }).then(function (response) {
+        }).then((response) => {
             // list-group append an li to it with just set text
 
             // console.log(response.name);
@@ -60,7 +70,7 @@ searchBtn.click(function () {
             $.ajax({
                 url: urlUV,
                 method: "GET"
-            }).then(function (response) {
+            }).then((response) => {
 
                 let currentUV = currentTemp.append(`<p>UV Index: ${response.value}</p>`).addClass("card-text");
                 currentUV.addClass("UV");
@@ -68,24 +78,24 @@ searchBtn.click(function () {
             });
         });
 
-        // Start call for 5-day forecast 
+        // Call for 5-day forecast 
         $.ajax({
             url: urlFiveDay,
             method: "GET"
-        }).then(function (response) {
+        }).then((response) => {
             // Array for 5-days 
-            var day = [0, 8, 16, 24, 32];
-            var fiveDayForecast = $(".fiveDayForecast").addClass("card-body");
-            var fiveDayCurrent = $(".fiveDayCurrent").addClass("card-text");
-            fiveDayDiv.empty();
-            // For each for 5 days
-            day.forEach(function (i) {
-                var FiveDayTimeUTC1 = new Date(response.list[i].dt * 1000);
+            let day = [0, 8, 16, 24, 32];
+            let fiveDayForecast = $(".fiveDayForecast").addClass("card-body");
+            let fiveDayCurrent = $(".fiveDayCurrent").addClass("card-text");
+            fiveDayCurrent.empty();
+
+            // For each loop for 5-day forecast
+            day.forEach((i) => {
+                let FiveDayTimeUTC1 = new Date(response.list[i].dt * 1000);
                 FiveDayTimeUTC1 = FiveDayTimeUTC1.toLocaleDateString("en-US");
 
                 fiveDayCurrent.append(`<div class=fiveDayColor><p>${FiveDayTimeUTC1}</p> <img src="https://openweathermap.org/img/wn/${response.list[i].weather[0].icon}@2x.png"> <p>Temperature: ${response.list[i].main.temp}</p> <p> Humidity: ${response.list[i].main.humidity}%</p></div>`);
             });
-
         });
     }
 });
